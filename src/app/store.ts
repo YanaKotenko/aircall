@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
-import movieReducer from '../store/reducer';
+import callsReducer from '../store/reducer';
 
 const reducers = {
-  movies: movieReducer,
+  calls: callsReducer,
 };
-
 const rootReducer = combineReducers(reducers);
+export type TRootStoreState = ReturnType<typeof rootReducer>
+
 export default rootReducer;
