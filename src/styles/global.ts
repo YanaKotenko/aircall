@@ -15,6 +15,7 @@ export default createGlobalStyle`
 export const Wrapper = styled.div`
     min-height: 100vh;
     background-color: #00b288;
+    font-size: 14px;
 `;
 
 export const Content = styled.div`

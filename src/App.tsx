@@ -9,12 +9,14 @@ import {
 } from './store/actions';
 
 import Call from './components/Call';
+import CallDetail from './components/CallDetail';
 
 import { Wrapper, Content } from './styles/global';
 
 const App = () => {
   const dispatch = useDispatch();
-  const { callsList } = useSelector((store: TRootStoreState) => store.calls);
+  // const { callsList, callDetail } = useSelector((store: TRootStoreState) => store.calls);
+  const { callsList, callDetail } = useSelector((store: TRootStoreState) => store.calls);
 
   useEffect(() => {
     dispatch(getCalls());
@@ -26,6 +28,7 @@ const App = () => {
         {callsList.map((call: ICall) => (
           <Call key={call.id} call={call} />
         ))}
+        {/* <CallDetail callDetail={callDetail} /> */}
       </Content>
     </Wrapper>
   );

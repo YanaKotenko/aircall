@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@types/styled-components": "^5.1.13",
-    "typescript-plugin-css-modules": "^3.4.0"
+    "typescript-plugin-css-modules": "^3.4.0",
+    "babel-plugin-styled-components": "^1.13.2"
   }
 }
