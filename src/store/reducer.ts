@@ -1,33 +1,57 @@
 import {
   GET_CALLS,
+  SAVE_TOKEN,
+  PICK_CALL,
+  CLEAR_CALL,
 } from './const';
+import { IState } from './types';
 
 const initState = {
   callsList: [],
   callDetail: {
-    id: 2,
-    direction: 'outbound',
-    from: '+551234234',
-    to: '+7669342432',
-    duration: 786867,
-    isArchived: true,
-    callType: 'voicemail',
-    via: '+00066699888',
-    createdAt: 'date 2',
+    id: '',
+    direction: '',
+    from: '',
+    to: '',
+    duration: 0,
+    isArchived: false,
+    callType: '',
+    via: '',
+    createdAt: '',
     notes: [{
-      id: 2223333,
-      content: 'Hhhhhh fw jhg fhgfwfg',
+      id: '',
+      content: '',
     }]
-  }
+  },
+  token: '',
 };
 
-const callsReducer = (state = initState, action: any) => {
+const callsReducer = (state: IState = initState, action: any) => {
   switch (action.type) {
-    case GET_CALLS:
+    case GET_CALLS: {
       return {
         ...state,
         callsList: action.callsList,
       };
+    }
+    case SAVE_TOKEN: {
+      return {
+        ...state,
+        token: action.token,
+      };
+    }
+    case PICK_CALL: {
+      return {
+        ...state,
+        callDetail: action.call,
+      };
+    }
+    case CLEAR_CALL: {
+      return {
+        ...state,
+        callDetail: initState.callDetail,
+      };
+    }
 
     default:
       return state;

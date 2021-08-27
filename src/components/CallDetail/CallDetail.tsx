@@ -3,23 +3,20 @@ import React from 'react';
 import { ICall } from '../../store/types';
 import {
   CallDetailBox,
+  CallDetailClose,
 } from './styles';
 
 interface IProps {
-  callDetail: ICall
+  callDetail: ICall;
+  onClickClose(): void;
 }
 
 const CallDetail = (props: IProps) => {
-  const { callDetail } = props;
-
-  // const onDeleteMovie = (id) => {
-  //   dispatch(deleteMovie(id));
-  // }
-
-  console.log(callDetail);
+  const { callDetail, onClickClose } = props;
 
   return (
     <CallDetailBox>
+      <CallDetailClose onClick={onClickClose} />
       asd
     </CallDetailBox>
   );

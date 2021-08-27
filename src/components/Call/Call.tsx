@@ -1,9 +1,8 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-
-// import { deleteMovie } from '../../store/actions';
+import { format } from 'date-fns';
 
 import { ICall } from '../../store/types';
+
 import {
   CallBox,
   CallArrow,
@@ -16,21 +15,15 @@ import {
 } from './styles';
 
 interface IProps {
-  call: ICall
+  call: ICall;
+  onClickCall(): void;
 }
 
 const Call = (props: IProps) => {
-  const dispatch = useDispatch();
-  const { call } = props;
-
-  // const onDeleteMovie = (id) => {
-  //   dispatch(deleteMovie(id));
-  // }
-
-  console.log(call);
+  const { call, onClickCall } = props;
 
   return (
-    <CallBox>
+    <CallBox onClick={onClickCall}>
       <CallCol>
         <CallArrow type={call.direction} />
         <CallInfo>
@@ -43,7 +36,7 @@ const Call = (props: IProps) => {
         </CallInfo>
       </CallCol>
       <CallCol>
-        <CallDate>{call.createdAt}</CallDate>
+        <CallDate>{format(new Date(call.createdAt), 'dd/MM/yyyy')}</CallDate>
         <CallPhone />
       </CallCol>
     </CallBox>

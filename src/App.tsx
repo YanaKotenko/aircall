@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-// import axios from 'axios';
 import { TRootStoreState } from './app/store';
 
 import { ICall } from './store/types';
@@ -8,46 +7,60 @@ import { ICall } from './store/types';
 import {
   getCalls,
   getToken,
+  pickCall,
+  clearCall,
 } from './store/actions';
 
 import Call from './components/Call';
 import CallDetail from './components/CallDetail';
 
-import { Wrapper, Content } from './styles/global';
+import { Body, Wrapper, Content, CallList } from './styles/global';
 
 const App = () => {
   const dispatch = useDispatch();
-  // const { callsList, callDetail } = useSelector((store: TRootStoreState) => store.calls);
-  const { callsList, callDetail } = useSelector((store: TRootStoreState) => store.calls);
+  const { callsList, callDetail, token } = useSelector((store: TRootStoreState) => store.calls);
+  const [CallDetailIsVisibile, setCallDetailVisibility] = useState(false);
 
   useEffect(() => {
-    dispatch(getCalls());
-    // axios.get(`https://jsonplaceholder.typicode.com/users`)
-    // axios.get(`https://frontend-test-api.aircall.io`)
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-
-    // const body = {
-    //   username: 'Yana',
-    //   password: 'Yana',
-    // }
-    // axios.post(`https://frontend-test-api.aircall.io/auth/login`, body)
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    getToken();
+    dispatch(getToken());
   }, []);
 
+  useEffect(() => {
+    if (token) dispatch(getCalls(token));
+  }, [token]);
+
+  const onPickCall = (call: ICall) => {
+    dispatch(pickCall(call));
+    setCallDetailVisibility(true);
+  };
+
+  const onCloseDetail = () => {
+    dispatch(clearCall());
+    setCallDetailVisibility(false);
+  };
+
   return (
-    <Wrapper>
-      <Content>
-        {callsList.map((call: ICall) => (
-          <Call key={call.id} call={call} />
-        ))}
-        <CallDetail callDetail={callDetail} />
-      </Content>
-    </Wrapper>
+    <Body>
+      <Wrapper>
+        <Content>
+          <CallList>
+            {callsList.map((call: ICall) => (
+              <Call
+                key={call.id}
+                call={call}
+                onClickCall={(): void => onPickCall(call)}
+              />
+            ))}
+          </CallList>
+          {CallDetailIsVisibile && (
+            <CallDetail
+              callDetail={callDetail}
+              onClickClose={onCloseDetail}
+            />
+          )}
+        </Content>
+      </Wrapper>
+    </Body>
   );
 }
 

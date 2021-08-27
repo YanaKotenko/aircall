@@ -1,6 +1,10 @@
+export interface IState {
+	callsList: Array<ICall>;
+  callDetail: ICall;
+  token: string;
+}
 export interface ICall {
-	id: number;
-  // direction: 'inbound' | 'outbound';
+	id: string;
   direction: string;
   from: string;
   to: string;
@@ -12,7 +16,7 @@ export interface ICall {
   notes: Array<INote>;
 }
 
-interface INote {
-	id: number;
+export interface INote {
+	id: string;
   content: string;
 }

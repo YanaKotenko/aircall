@@ -1,51 +1,53 @@
 import axios from 'axios';
-import { movies$ } from '../api/config';
+import { loginUrl, callsUrl } from '../api/config';
 import {
   GET_CALLS,
+  SAVE_TOKEN,
+  PICK_CALL,
+  CLEAR_CALL,
 } from './const';
+import { ICall, INote } from './types';
 
-export const getCalls = () => (dispatch: any) => {
-  movies$.then((res) => {
-    dispatch({ type: GET_CALLS, callsList: res });
+export const getToken = () => (dispatch: any) => {
+  const body = {
+    username: 'usernameYana',
+    password: 'passwordKotenko',
+  };
+  axios.post(loginUrl, body).then((res) => {
+    dispatch({ type: SAVE_TOKEN, token: res.data.access_token });
   });
-
-  // getAccessToken.then((res) => {
-  //   console.log(res);
-  // })
 };
 
-export const getToken = () => {
-  // const config = {
-  //   headers: { Authorization: `Bearer ${window.token}` }
-  // };
-  const body = {
-    username: 'Yana2',
-    password: 'Yana2',
-  }
-  axios.post(`https://frontend-test-api.aircall.io/auth/login`, body)
-    .then((res) => {
-      console.log(res);
-      // window.token = res.data.access_token;
-      // axios.post(`https://frontend-test-api.aircall.io/auth/refresh-token`)
-      //   .then((res) => {
-      //     console.log('refresh', res);
-      //   })
-      // const headers = {
-      //   'Content-Type': 'application/json',
-      //   Authorization: `Bearer ${res.data.access_token}`,
-      // };
-      axios.get(`https://frontend-test-api.aircall.io/calls`, {
-        headers: {
-          'Authorization': `Bearer ${res.data.access_token}`
-        }
-      })
-        .then((res) => {
-          console.log('calls', res);
-          
-        })
-    })
-}
+export const getCalls = (token: string) => (dispatch: any) => {
+  const headers = {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  };
+  axios.get(callsUrl, headers).then((res) => {
+    const callsList: Array<ICall> = res.data.nodes.map((call: any): ICall => ({
+      id: call.id,
+      direction: call.direction,
+      from: call.from,
+      to: call.to,
+      duration: call.duration,
+      isArchived: call.is_archived,
+      callType: call.call_type,
+      via: call.via,
+      createdAt: call.created_at,
+      notes: call.notes.map((note: any): INote => ({
+        id: note.id,
+        content: note.content,
+      })),
+    }));
+    dispatch({ type: GET_CALLS, callsList });
+  })
+};
 
-// export const setCategories = (filteredCategories) => (dispatch) => {
-//   dispatch({ type: SET_FILTERS_CATEGORIES, categories: filteredCategories });
-// };
+export const pickCall = (call: ICall) => (dispatch: any) => {
+  dispatch({ type: PICK_CALL, call });
+};
+
+export const clearCall = () => (dispatch: any) => {
+  dispatch({ type: CLEAR_CALL });
+};
