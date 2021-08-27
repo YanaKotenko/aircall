@@ -11,6 +11,7 @@
     "@types/node": "^16.7.2",
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
+    "axios": "^0.21.1",
     "classnames": "^2.3.1",
     "node-sass": "^5.0.0",
     "react": "^17.0.2",
@@ -43,7 +44,7 @@
   },
   "devDependencies": {
     "@types/styled-components": "^5.1.13",
-    "typescript-plugin-css-modules": "^3.4.0",
-    "babel-plugin-styled-components": "^1.13.2"
+    "babel-plugin-styled-components": "^1.13.2",
+    "typescript-plugin-css-modules": "^3.4.0"
   }
 }

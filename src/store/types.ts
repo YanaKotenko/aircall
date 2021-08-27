@@ -1,6 +1,7 @@
 export interface ICall {
 	id: number;
-  direction: 'inbound' | 'outbound';
+  // direction: 'inbound' | 'outbound';
+  direction: string;
   from: string;
   to: string;
   duration: number;

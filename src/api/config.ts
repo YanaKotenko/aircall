@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const calls = [
   {
     id: 1,
@@ -45,3 +47,14 @@ const calls = [
 ]
 
 export const movies$ = new Promise((resolve, reject) => setTimeout(resolve, 100, calls))
+
+export const getAccessToken = () => {
+  const body = {
+    username: 'Yana',
+    password: 'Yana',
+  }
+  axios.post(`https://frontend-test-api.aircall.io/auth/login`, body)
+    .then((res) => {
+      console.log(res);
+    })
+}

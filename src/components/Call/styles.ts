@@ -3,7 +3,7 @@ import arrowIcon from '../../assets/arrow.svg';
 import phoneIcon from '../../assets/phone.svg';
 
 interface IArrow {
-	type: 'inbound' | 'outbound';
+	type: string;
 }
  
 export const CallBox = styled.div`
