@@ -1,6 +1,6 @@
 import styled, { createGlobalStyle } from 'styled-components';
 
-export default createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;
@@ -23,12 +23,13 @@ export const Wrapper = styled.div`
   width: 100%;
   margin: auto;
   padding: 40px 10px;
-  background-color: #f3f3f3;
+  background-color: #e0e0e0;
   border-radius: 25px;
 `;
 
 export const Content = styled.div`
   position: relative;
+  overflow: hidden;
 `;
 
 export const CallList = styled.div`

@@ -14,7 +14,7 @@ import {
 import Call from './components/Call';
 import CallDetail from './components/CallDetail';
 
-import { Body, Wrapper, Content, CallList } from './styles/global';
+import { GlobalStyle, Body, Wrapper, Content, CallList } from './styles/global';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -29,18 +29,19 @@ const App = () => {
     if (token) dispatch(getCalls(token));
   }, [token]);
 
-  const onPickCall = (call: ICall) => {
+  const onPickCall = (call: ICall): void => {
     dispatch(pickCall(call));
     setCallDetailVisibility(true);
   };
 
-  const onCloseDetail = () => {
+  const onCloseDetail = (): void => {
     dispatch(clearCall());
     setCallDetailVisibility(false);
   };
 
   return (
     <Body>
+      <GlobalStyle />
       <Wrapper>
         <Content>
           <CallList>
@@ -52,12 +53,11 @@ const App = () => {
               />
             ))}
           </CallList>
-          {CallDetailIsVisibile && (
-            <CallDetail
-              callDetail={callDetail}
-              onClickClose={onCloseDetail}
-            />
-          )}
+          <CallDetail
+            open={CallDetailIsVisibile}
+            callDetail={callDetail}
+            onClickClose={onCloseDetail}
+          />
         </Content>
       </Wrapper>
     </Body>
