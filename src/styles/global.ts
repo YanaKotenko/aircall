@@ -1,4 +1,5 @@
-import styled, { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components/macro';
+import { colors } from './colors';
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -14,16 +15,16 @@ export const GlobalStyle = createGlobalStyle`
 
 export const Body = styled.div`
   min-height: 100vh;
-  background-color: #00b288;
+  background-color: ${colors.green};
   font-size: 14px;
 `;
 
 export const Wrapper = styled.div`
-  max-width: 600px;
+  max-width: 400px;
   width: 100%;
   margin: auto;
   padding: 40px 10px;
-  background-color: #e0e0e0;
+  background-color: ${colors.greyLight};
   border-radius: 25px;
 `;
 

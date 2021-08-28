@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import secondsToMinutes from 'date-fns/secondsToMinutes'
 import minutesToHours from 'date-fns/minutesToHours'
 
@@ -20,7 +20,7 @@ interface IProps {
   onClickClose(): void;
 }
 
-const CallDetail = (props: IProps) => {
+const CallDetail = (props: IProps): ReactElement => {
   const { callDetail, onClickClose, open } = props;
 
   const getDuration = (duration: number): string => {

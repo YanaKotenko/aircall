@@ -1,10 +1,11 @@
-import axios from 'axios';
-import { loginUrl, callsUrl } from '../api/config';
+import apiFetcher from '../utils/apiFetcher';
+import { loginUrl, callsUrl, archiveUrl, unarchiveUrl } from '../api/config';
 import {
   GET_CALLS,
   SAVE_TOKEN,
   PICK_CALL,
   CLEAR_CALL,
+  SET_IS_ARCHIVED,
 } from './const';
 import { ICall, INote } from './types';
 
@@ -13,19 +14,14 @@ export const getToken = () => (dispatch: any) => {
     username: 'usernameYana',
     password: 'passwordKotenko',
   };
-  axios.post(loginUrl, body).then((res) => {
-    dispatch({ type: SAVE_TOKEN, token: res.data.access_token });
+  apiFetcher.post(loginUrl, body).then((res) => {
+    dispatch({ type: SAVE_TOKEN, token: res?.data.access_token });
   });
 };
 
 export const getCalls = (token: string) => (dispatch: any) => {
-  const headers = {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    }
-  };
-  axios.get(callsUrl, headers).then((res) => {
-    const callsList: Array<ICall> = res.data.nodes.map((call: any): ICall => ({
+  apiFetcher.get(callsUrl, token).then((res) => {
+    const callsList: Array<ICall> = res?.data.nodes.map((call: any): ICall => ({
       id: call.id,
       direction: call.direction,
       from: call.from,
@@ -41,7 +37,27 @@ export const getCalls = (token: string) => (dispatch: any) => {
       })),
     }));
     dispatch({ type: GET_CALLS, callsList });
-  })
+  });
+};
+
+export const archiveCall = (token: string, callId: string) => (dispatch: any) => {
+  apiFetcher.put(archiveUrl.replace(':id', 'sda'), token).then((res) => {
+    dispatch({
+      type: SET_IS_ARCHIVED,
+      id: res?.data.id,
+      isArchived: res?.data.is_archived,
+    });
+  });
+};
+
+export const unarchiveCall = (token: string, callId: string) => (dispatch: any) => {
+  apiFetcher.put(unarchiveUrl.replace(':id', callId), token).then((res) => {
+    dispatch({
+      type: SET_IS_ARCHIVED,
+      id: res?.data.id,
+      isArchived: res?.data.is_archived,
+    });
+  });
 };
 
 export const pickCall = (call: ICall) => (dispatch: any) => {

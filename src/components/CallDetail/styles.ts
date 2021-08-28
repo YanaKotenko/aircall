@@ -1,12 +1,13 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import closeIcon from '../../assets/close.svg';
+import { colors } from '../../styles/colors';
 
 interface ICallDetailBox {
 	open: boolean;
 }
 
 export const CallDetailBox = styled.div<ICallDetailBox>`
-	background-color: #fff;
+	background-color: ${colors.white};
 	position: absolute;
 	top: 0;
 	transform: ${(p): string => (p.open ? 'translateX(0)' : 'translateX(100%)')};
@@ -29,10 +30,10 @@ export const CallDetailClose = styled.div`
 `;
 
 export const CallDetailHeader = styled.div`
-	background-color: #002432;
+	background-color: ${colors.blueDark};
 	text-align: center;
 	padding: 20px 0;
-	color: #fff;
+	color: ${colors.white};
 `;
 
 export const CallDirection = styled.div`

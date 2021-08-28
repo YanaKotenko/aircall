@@ -3,8 +3,9 @@ import {
   SAVE_TOKEN,
   PICK_CALL,
   CLEAR_CALL,
+  SET_IS_ARCHIVED,
 } from './const';
-import { IState } from './types';
+import { ICall, IState } from './types';
 
 const initState = {
   callsList: [],
@@ -50,6 +51,16 @@ const callsReducer = (state: IState = initState, action: any) => {
       return {
         ...state,
         callDetail: initState.callDetail,
+      };
+    }
+    case SET_IS_ARCHIVED: {
+      const callsListCopy = [...state.callsList];
+      const call = callsListCopy.find((callItem: ICall) => callItem.id === action.id);
+      if (call) call.isArchived = action.isArchived;
+
+      return {
+        ...state,
+        callsList: callsListCopy,
       };
     }
 

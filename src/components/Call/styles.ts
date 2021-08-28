@@ -1,23 +1,26 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import arrowIcon from '../../assets/arrow.svg';
-import phoneIcon from '../../assets/phone.svg';
+import { colors } from '../../styles/colors';
 
 interface IArrow {
 	type: string;
 }
- 
+
 export const CallBox = styled.div`
-	background-color: #fff;
+	background-color: ${colors.white};
 	padding: 10px;
 	margin: 4px 0;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	cursor: pointer;
 `;
  
-export const CallCol = styled.div`
-	
+export const CallWrap = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	cursor: pointer;
+	width: 90%;
 `;
  
 export const CallArrow = styled.div<IArrow>`
@@ -35,18 +38,21 @@ export const CallArrow = styled.div<IArrow>`
 export const CallDate = styled.div`
 	display: inline-block;
 	vertical-align: middle;
+	font-size: 12px;
 `;
  
-export const CallPhone = styled.div`
+export const CallArchive = styled.div`
 	width: 25px;
 	height: 25px;
-	background-image: url(${phoneIcon});
 	background-size: contain;
 	background-position: 50% 50%;
 	background-repeat: no-repeat;
-	display: inline-block;
-	vertical-align: middle;
 	margin-left: 10px;
+	cursor: pointer;
+
+	&:hover {
+		color: ${colors.greenDark};
+	}
 `;
  
 export const CallFrom = styled.div`
@@ -55,7 +61,7 @@ export const CallFrom = styled.div`
  
 export const CallTo = styled.div`
 	font-size: 12px;
-	color: #666;
+	color: ${colors.grey};
 `;
  
 export const CallInfo = styled.div`

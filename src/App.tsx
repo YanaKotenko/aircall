@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ReactElement } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { TRootStoreState } from './app/store';
 
@@ -9,6 +9,8 @@ import {
   getToken,
   pickCall,
   clearCall,
+  unarchiveCall,
+  archiveCall,
 } from './store/actions';
 
 import Call from './components/Call';
@@ -16,7 +18,7 @@ import CallDetail from './components/CallDetail';
 
 import { GlobalStyle, Body, Wrapper, Content, CallList } from './styles/global';
 
-const App = () => {
+const App = (): ReactElement => {
   const dispatch = useDispatch();
   const { callsList, callDetail, token } = useSelector((store: TRootStoreState) => store.calls);
   const [CallDetailIsVisibile, setCallDetailVisibility] = useState(false);
@@ -39,6 +41,14 @@ const App = () => {
     setCallDetailVisibility(false);
   };
 
+  const onArchive = (callId: string): void => {
+    dispatch(archiveCall(token, callId));
+  };
+
+  const onUnarchive = (callId: string): void => {
+    dispatch(unarchiveCall(token, callId));
+  };
+
   return (
     <Body>
       <GlobalStyle />
@@ -50,6 +60,8 @@ const App = () => {
                 key={call.id}
                 call={call}
                 onClickCall={(): void => onPickCall(call)}
+                onArchive={(): void => onArchive(call.id)}
+                onUnarchive={(): void => onUnarchive(call.id)}
               />
             ))}
           </CallList>
