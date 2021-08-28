@@ -1,5 +1,10 @@
 import styled, { createGlobalStyle } from 'styled-components/macro';
+import paginationIcon from '../assets/pagination-arrow.svg';
 import { colors } from './colors';
+
+interface IPrev {
+	disabled: boolean;
+}
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -33,6 +38,29 @@ export const Content = styled.div`
   overflow: hidden;
 `;
 
-export const CallList = styled.div`
-  
+export const CallPagination = styled.div`
+  text-align: center;
+  margin-top: 20px;
+`;
+
+const PaginationIcon = styled.div<IPrev>`
+  width: 30px;
+  height: 30px;
+  background: url(${paginationIcon}) no-repeat 50% 50%;
+  background-size: contain;
+  display: inline-block;
+  vertical-align: middle;
+  border: 2px solid #000;
+  border-radius: 4px;
+  margin: 0 5px;
+  cursor: ${(p): string => (p.disabled ? 'initial' : 'pointer')};
+`;
+
+export const CallPaginationPrev = styled(PaginationIcon)<IPrev>`
+  transform: rotate(90deg);
+  opacity: ${(p): string => (p.disabled ? '0.2' : '1')};
+`;
+
+export const CallPaginationNext = styled(PaginationIcon)`
+  transform: rotate(-90deg);
 `;

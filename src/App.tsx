@@ -19,12 +19,23 @@ import {
 import Call from './components/Call';
 import CallDetail from './components/CallDetail';
 
-import { GlobalStyle, Body, Wrapper, Content, CallList } from './styles/global';
+import {
+  GlobalStyle,
+  Body,
+  Wrapper,
+  Content,
+  CallPagination,
+  CallPaginationPrev,
+  CallPaginationNext,
+} from './styles/global';
 
 const App = (): ReactElement => {
   const dispatch = useDispatch();
-  const { callsList, callDetail, token } = useSelector((store: TRootStoreState) => store.calls);
+  const {
+    callsList, callDetail, token, hasNextPage,
+  } = useSelector((store: TRootStoreState) => store.calls);
   const [callDetailIsVisibile, setCallDetailVisibility] = useState(false);
+  const [paginationOffset, setPaginationOffset] = useState(1);
 
   useEffect(() => {
     dispatch(getToken());
@@ -32,22 +43,30 @@ const App = (): ReactElement => {
 
   useEffect(() => {
     if (token) {
-      dispatch(getCalls(token));
+      dispatch(getCalls(token, paginationOffset.toString()));
 
 
-      const pusher = new Pusher('d44e3d910d38a928e0be', {
-        cluster: 'eu',
-        authEndpoint: pusherUrl,
-      });
-      const channel = pusher.subscribe('private-aircall');
-      console.log(channel);
-      channel.bind('update-call', (data: any) => {
-        console.log(data);
-        return data;
-        // add new price into the APPL widget
-      });
+      // const pusher = new Pusher('d44e3d910d38a928e0be', {
+      //   cluster: 'eu',
+      //   authEndpoint: pusherUrl,
+      // });
+      // const channel = pusher.subscribe('private-aircall');
+      // console.log(channel);
+      // channel.bind('update-call', (data: any) => {
+      //   console.log(data);
+      //   return data;
+      //   // add new price into the APPL widget
+      // });
     }
   }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      console.log(paginationOffset);
+      
+      dispatch(getCalls(token, paginationOffset.toString()));
+    }
+  }, [paginationOffset]);
 
   const onPickCall = (call: ICall): void => {
     dispatch(pickCall(call));
@@ -71,12 +90,20 @@ const App = (): ReactElement => {
     dispatch(sendNote(token, callId, note));
   };
 
+  const onClickPrev = (): void => {
+    if (paginationOffset > 1) setPaginationOffset(paginationOffset - 1);
+  };
+
+  const onClickNext = (): void => {
+    if (hasNextPage) setPaginationOffset(paginationOffset + 1);
+  };
+
   return (
     <Body>
       <GlobalStyle />
       <Wrapper>
         <Content>
-          <CallList>
+          <div>
             {callsList.map((call: ICall) => (
               <Call
                 key={call.id}
@@ -86,7 +113,7 @@ const App = (): ReactElement => {
                 onUnarchive={(): void => onUnarchive(call.id)}
               />
             ))}
-          </CallList>
+          </div>
           <CallDetail
             open={callDetailIsVisibile}
             callDetail={callDetail}
@@ -95,6 +122,10 @@ const App = (): ReactElement => {
             onArchive={onArchive}
             onUnarchive={onUnarchive}
           />
+          <CallPagination>
+            <CallPaginationPrev onClick={onClickPrev} disabled={paginationOffset === 1} />
+            <CallPaginationNext onClick={onClickNext} disabled={!hasNextPage} />
+          </CallPagination>
         </Content>
       </Wrapper>
     </Body>

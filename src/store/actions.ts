@@ -19,8 +19,9 @@ export const getToken = () => (dispatch: any) => {
   });
 };
 
-export const getCalls = (token: string) => (dispatch: any) => {
-  apiFetcher.get(callsUrl, token).then((res) => {
+export const getCalls = (token: string, offset: string) => (dispatch: any) => {
+  const filter = `?offset=${offset}&limit=10`;
+  apiFetcher.get(`${callsUrl}${filter}`, token).then((res) => {
     const callsList: Array<ICall> = res?.data.nodes.map((call: any): ICall => ({
       id: call.id,
       direction: call.direction,
@@ -36,7 +37,11 @@ export const getCalls = (token: string) => (dispatch: any) => {
         content: note.content,
       })),
     }));
-    dispatch({ type: GET_CALLS, callsList });
+    dispatch({
+      type: GET_CALLS,
+      callsList,
+      hasNextPage: res?.data.hasNextPage,
+    });
   });
 };
 

@@ -22,6 +22,7 @@ const initState = {
     notes: [],
   },
   token: '',
+  hasNextPage: false,
 };
 
 const callsReducer = (state: IState = initState, action: any) => {
@@ -30,6 +31,7 @@ const callsReducer = (state: IState = initState, action: any) => {
       return {
         ...state,
         callsList: action.callsList,
+        hasNextPage: action.hasNextPage,
       };
     }
     case SAVE_TOKEN: {

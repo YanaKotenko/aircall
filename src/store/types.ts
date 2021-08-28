@@ -2,6 +2,7 @@ export interface IState {
 	callsList: Array<ICall>;
   callDetail: ICall;
   token: string;
+  hasNextPage: boolean;
 }
 export interface ICall {
 	id: string;
