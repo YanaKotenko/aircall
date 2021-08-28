@@ -35,11 +35,7 @@ export const CallDetailHeader = styled.div`
 `;
 
 export const CallDirection = styled.div`
-	margin-bottom: 20px;
-`;
-
-export const CallAddress = styled.div`
-	margin-bottom: 10px;
+	margin-bottom: 15px;
 `;
 
 export const CallAddressSign = styled.div`
@@ -57,7 +53,7 @@ export const CallAddressNumber = styled.div`
 `;
 
 export const CallNotes = styled.div`
-	
+	height: 68%;
 `;
 
 export const CallNotesTitle = styled.div`
@@ -66,25 +62,28 @@ export const CallNotesTitle = styled.div`
 	font-weight: bold;
 `;
 
-export const CallNotesList = styled.div`
-
+export const CallNotesScrollBox = styled.div`
+	height: 90%;
+	overflow: auto;
 `;
 
 export const CallNote = styled.div`
 	background-color: ${colors.white};
 	padding: 10px;
-	border-radius: 15px;
+	border-radius: 10px;
 	color: ${colors.black};
+	margin-bottom: 8px;
 `;
 
-export const CallLeaveNote = styled.div`
+export const CallDetailBtn = styled.div`
 	background-color: ${colors.green};
-	padding: 15px;
-	font-size: 20px;
-	border-radius: 15px;
+	padding: 11px;
+	border-radius: 8px;
 	color: ${colors.white};
 	text-align: center;
 	cursor: pointer;
+	display: inline-block;
+	margin-top: 15px;
 
 	&:hover {
 		background-color: ${colors.greenDark};
@@ -94,3 +93,26 @@ export const CallLeaveNote = styled.div`
 export const CallDuration = styled.div`
 	margin-top: 5px;
 `;
+
+export const ModalNote = styled.div`
+	background-color: ${colors.white};
+	width: 300px;
+	height: 200px;
+	padding: 15px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 1;
+	border-radius: 10px;
+`;
+
+export const ModalNoteTextArea = styled.textarea`
+	width: 100%;
+	height: 100px;
+	border: 1px solid ${colors.greyLight};
+	resize: none;
+	padding: 8px;
+	font-family: inherit;
+`;
+

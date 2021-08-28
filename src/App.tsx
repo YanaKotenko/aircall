@@ -1,7 +1,9 @@
 import React, { useEffect, useState, ReactElement } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import Pusher from 'pusher-js';
 import { TRootStoreState } from './app/store';
 
+import { pusherUrl } from './api/config';
 import { ICall } from './store/types';
 
 import {
@@ -11,6 +13,7 @@ import {
   clearCall,
   unarchiveCall,
   archiveCall,
+  sendNote,
 } from './store/actions';
 
 import Call from './components/Call';
@@ -21,14 +24,29 @@ import { GlobalStyle, Body, Wrapper, Content, CallList } from './styles/global';
 const App = (): ReactElement => {
   const dispatch = useDispatch();
   const { callsList, callDetail, token } = useSelector((store: TRootStoreState) => store.calls);
-  const [CallDetailIsVisibile, setCallDetailVisibility] = useState(false);
+  const [callDetailIsVisibile, setCallDetailVisibility] = useState(false);
 
   useEffect(() => {
     dispatch(getToken());
   }, []);
 
   useEffect(() => {
-    if (token) dispatch(getCalls(token));
+    if (token) {
+      dispatch(getCalls(token));
+
+
+      const pusher = new Pusher('d44e3d910d38a928e0be', {
+        cluster: 'eu',
+        authEndpoint: pusherUrl,
+      });
+      const channel = pusher.subscribe('private-aircall');
+      console.log(channel);
+      channel.bind('update-call', (data: any) => {
+        console.log(data);
+        return data;
+        // add new price into the APPL widget
+      });
+    }
   }, [token]);
 
   const onPickCall = (call: ICall): void => {
@@ -49,6 +67,10 @@ const App = (): ReactElement => {
     dispatch(unarchiveCall(token, callId));
   };
 
+  const onSendNote = (callId: string, note: string): void => {
+    dispatch(sendNote(token, callId, note));
+  };
+
   return (
     <Body>
       <GlobalStyle />
@@ -66,9 +88,10 @@ const App = (): ReactElement => {
             ))}
           </CallList>
           <CallDetail
-            open={CallDetailIsVisibile}
+            open={callDetailIsVisibile}
             callDetail={callDetail}
-            onClickClose={onCloseDetail}
+            onCloseDetail={onCloseDetail}
+            onSendNote={onSendNote}
           />
         </Content>
       </Wrapper>

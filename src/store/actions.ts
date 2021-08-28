@@ -1,5 +1,5 @@
 import apiFetcher from '../utils/apiFetcher';
-import { loginUrl, callsUrl, archiveUrl, unarchiveUrl } from '../api/config';
+import { loginUrl, callsUrl, archiveUrl, unarchiveUrl, noteUrl } from '../api/config';
 import {
   GET_CALLS,
   SAVE_TOKEN,
@@ -41,7 +41,7 @@ export const getCalls = (token: string) => (dispatch: any) => {
 };
 
 export const archiveCall = (token: string, callId: string) => (dispatch: any) => {
-  apiFetcher.put(archiveUrl.replace(':id', 'sda'), token).then((res) => {
+  apiFetcher.put(archiveUrl.replace(':id', callId), token).then((res) => {
     dispatch({
       type: SET_IS_ARCHIVED,
       id: res?.data.id,
@@ -57,6 +57,15 @@ export const unarchiveCall = (token: string, callId: string) => (dispatch: any) 
       id: res?.data.id,
       isArchived: res?.data.is_archived,
     });
+  });
+};
+
+export const sendNote = (token: string, callId: string, note: string) => (dispatch: any) => {
+  const body = {
+    content: note,
+  };
+  apiFetcher.post(noteUrl.replace(':id', callId), body, token).then((res) => {
+    console.log('note added', res);
   });
 };
 

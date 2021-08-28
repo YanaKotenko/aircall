@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect} from 'react';
+import React, { ReactElement, useState, useEffect, ChangeEvent } from 'react';
 import { addSeconds, format } from 'date-fns'
 
 import { ICall, INote } from '../../store/types';
@@ -7,35 +7,52 @@ import {
   CallDetailClose,
   CallDetailHeader,
   CallDirection,
-  CallAddress,
   CallAddressSign,
   CallAddressNumber,
   CallNotes,
   CallNotesTitle,
-  CallNotesList,
   CallNote,
-  CallLeaveNote,
+  CallDetailBtn,
   CallDuration,
+  CallNotesScrollBox,
+  ModalNote,
+  ModalNoteTextArea,
 } from './styles';
 
 interface IProps {
   callDetail: ICall;
   open: boolean;
-  onClickClose(): void;
+  onCloseDetail(): void;
+  onSendNote(callId: string, note: string): void;
 }
 
 const CallDetail = (props: IProps): ReactElement => {
-  const { callDetail, onClickClose, open } = props;
+  const { callDetail, onCloseDetail, open, onSendNote } = props;
   const [durationTime, setDurationTime] = useState('');
+  const [modalIsVisible, setModalVisibility] = useState(false);
+  const [note, setNote] = useState('');
 
   useEffect(() => {
     const helperDate = addSeconds(new Date(0), callDetail.duration);
     setDurationTime(format(helperDate, 'hh:mm'));
   }, [callDetail.duration]);
 
+  const onOpenModalNote = (): void => {
+    setModalVisibility(true);
+  };
+
+  const onClickSend = (callId: string): void => {
+    setModalVisibility(false);
+    onSendNote(callId, note);
+  };
+
+  const onTyping = (event: ChangeEvent<HTMLTextAreaElement>): void => {
+    setNote(event.target.value);
+  };
+
   return (
     <CallDetailBox open={open}>
-      <CallDetailClose onClick={onClickClose} />
+      <CallDetailClose onClick={onCloseDetail} />
       <CallDetailHeader>
         <CallDirection>
           {callDetail.direction === 'inbound' ? 'Incoming call' : 'Outgoing call'}
@@ -43,26 +60,37 @@ const CallDetail = (props: IProps): ReactElement => {
           ({callDetail.callType})
           <CallDuration>{durationTime}</CallDuration>
         </CallDirection>
-        <CallAddress>
+        <div>
           <CallAddressSign>From</CallAddressSign>
           <CallAddressNumber>{callDetail.from}</CallAddressNumber>
-        </CallAddress>
-        <CallAddress>
+        </div>
+        <div>
           <CallAddressSign>To</CallAddressSign>
           <CallAddressNumber>{callDetail.to}</CallAddressNumber>
-        </CallAddress>
+        </div>
+        <CallDetailBtn onClick={onOpenModalNote}>Leave a note</CallDetailBtn>
       </CallDetailHeader>
       {callDetail.notes.length > 0 && (
         <CallNotes>
           <CallNotesTitle>Notes</CallNotesTitle>
-          <CallNotesList>
+          <CallNotesScrollBox>
             {callDetail.notes.map((note: INote) => (
               <CallNote key={note.id}>{note.content}</CallNote>
             ))}
-          </CallNotesList>
+          </CallNotesScrollBox>
         </CallNotes>
       )}
-      <CallLeaveNote>Leave a note</CallLeaveNote>
+      {modalIsVisible && (
+        <ModalNote>
+          <ModalNoteTextArea
+            name="textarea"
+            placeholder="Text your note here..."
+            value={note}
+            onChange={onTyping}
+          />
+          <CallDetailBtn onClick={(): void => onClickSend(callDetail.id)}>Send</CallDetailBtn>
+        </ModalNote>
+      )}
     </CallDetailBox>
   );
 }

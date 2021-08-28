@@ -3,3 +3,5 @@ export const loginUrl = `${baseUrl}/auth/login`;
 export const callsUrl = `${baseUrl}/calls`;
 export const archiveUrl = `${baseUrl}/calls/:id/archive`;
 export const unarchiveUrl = `${baseUrl}/calls/:id/unarchive`;
+export const noteUrl = `${baseUrl}/calls/:id/note`;
+export const pusherUrl = `${baseUrl}/pusher/auth`;

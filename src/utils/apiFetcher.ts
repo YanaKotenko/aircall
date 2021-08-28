@@ -6,8 +6,8 @@ class ApiFetcher {
     return this.makeRequest('get', endpoint, {}, token)
   };
 
-  post(endpoint: string, body: object) {
-    return this.makeRequest('post', endpoint, body)
+  post(endpoint: string, body: object, token?: string) {
+    return this.makeRequest('post', endpoint, body, token)
   };
 
   put(endpoint: string, token: string) {
