@@ -1,8 +1,7 @@
-import React, { ReactElement } from 'react';
-import secondsToMinutes from 'date-fns/secondsToMinutes'
-import minutesToHours from 'date-fns/minutesToHours'
+import React, { ReactElement, useState, useEffect} from 'react';
+import { addSeconds, format } from 'date-fns'
 
-import { ICall } from '../../store/types';
+import { ICall, INote } from '../../store/types';
 import {
   CallDetailBox,
   CallDetailClose,
@@ -11,6 +10,11 @@ import {
   CallAddress,
   CallAddressSign,
   CallAddressNumber,
+  CallNotes,
+  CallNotesTitle,
+  CallNotesList,
+  CallNote,
+  CallLeaveNote,
   CallDuration,
 } from './styles';
 
@@ -22,21 +26,23 @@ interface IProps {
 
 const CallDetail = (props: IProps): ReactElement => {
   const { callDetail, onClickClose, open } = props;
+  const [durationTime, setDurationTime] = useState('');
 
-  const getDuration = (duration: number): string => {
-    const minutes = secondsToMinutes(duration);
-    const hours = minutesToHours(minutes);
-
-    if (duration > 60 && duration < 3600) return `${minutes} min`;
-    if (duration > 3600) return `${hours} h`;
-    return `${duration} sec`;
-  }
+  useEffect(() => {
+    const helperDate = addSeconds(new Date(0), callDetail.duration);
+    setDurationTime(format(helperDate, 'hh:mm'));
+  }, [callDetail.duration]);
 
   return (
     <CallDetailBox open={open}>
       <CallDetailClose onClick={onClickClose} />
       <CallDetailHeader>
-        <CallDirection>{callDetail.direction === 'inbound' ? 'Incoming call' : 'Outgoing call'}</CallDirection>
+        <CallDirection>
+          {callDetail.direction === 'inbound' ? 'Incoming call' : 'Outgoing call'}
+          {' '}
+          ({callDetail.callType})
+          <CallDuration>{durationTime}</CallDuration>
+        </CallDirection>
         <CallAddress>
           <CallAddressSign>From</CallAddressSign>
           <CallAddressNumber>{callDetail.from}</CallAddressNumber>
@@ -45,8 +51,18 @@ const CallDetail = (props: IProps): ReactElement => {
           <CallAddressSign>To</CallAddressSign>
           <CallAddressNumber>{callDetail.to}</CallAddressNumber>
         </CallAddress>
-        <CallDuration>{getDuration(callDetail.duration)}</CallDuration>
       </CallDetailHeader>
+      {callDetail.notes.length > 0 && (
+        <CallNotes>
+          <CallNotesTitle>Notes</CallNotesTitle>
+          <CallNotesList>
+            {callDetail.notes.map((note: INote) => (
+              <CallNote key={note.id}>{note.content}</CallNote>
+            ))}
+          </CallNotesList>
+        </CallNotes>
+      )}
+      <CallLeaveNote>Leave a note</CallLeaveNote>
     </CallDetailBox>
   );
 }

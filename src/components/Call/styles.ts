@@ -1,8 +1,10 @@
 import styled from 'styled-components/macro';
 import arrowIcon from '../../assets/arrow.svg';
+import crossIcon from '../../assets/cross.svg';
+import voiceIcon from '../../assets/voicemail.svg';
 import { colors } from '../../styles/colors';
 
-interface IArrow {
+interface IType {
 	type: string;
 }
 
@@ -23,16 +25,25 @@ export const CallWrap = styled.div`
 	width: 90%;
 `;
  
-export const CallArrow = styled.div<IArrow>`
-	width: 25px;
-	height: 25px;
-	background-image: url(${arrowIcon});
-	background-size: contain;
-	background-position: 50% 50%;
-	background-repeat: no-repeat;
-	transform: ${(p): string => (p.type === 'inbound' ? 'rotate(45deg)' : 'rotate(-135deg)')};
+export const CallDirection = styled.div`
 	display: inline-block;
 	vertical-align: middle;
+`;
+ 
+export const CallType = styled.div<IType>`
+	width: 16px;
+	height: 16px;
+	margin: auto;
+	background: url(${(p): string => (p.type === 'missed' ? crossIcon : voiceIcon)}) no-repeat 50% 50%;
+	background-size: contain;
+`;
+ 
+export const CallArrow = styled.div<IType>`
+	width: 25px;
+	height: 25px;
+	background: url(${arrowIcon}) no-repeat 50% 50%;
+	background-size: contain;
+	transform: ${(p): string => (p.type === 'inbound' ? 'rotate(45deg)' : 'rotate(-135deg)')};
 `;
  
 export const CallDate = styled.div`

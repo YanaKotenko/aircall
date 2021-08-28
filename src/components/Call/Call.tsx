@@ -6,6 +6,8 @@ import { ICall } from '../../store/types';
 import {
   CallBox,
   CallArrow,
+  CallDirection,
+  CallType,
   CallDate,
   CallArchive,
   CallFrom,
@@ -44,7 +46,10 @@ const Call = (props: IProps): ReactElement => {
     <CallBox>
       <CallWrap onClick={onClickCall}>
         <div>
-          <CallArrow type={call.direction} />
+          <CallDirection>
+            <CallArrow type={call.direction} />
+            {call.callType !== 'answered' && <CallType type={call.callType} />}
+          </CallDirection>
           <CallInfo>
             <CallFrom>{call.from}</CallFrom>
             <CallTo>

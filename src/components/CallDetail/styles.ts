@@ -7,22 +7,22 @@ interface ICallDetailBox {
 }
 
 export const CallDetailBox = styled.div<ICallDetailBox>`
-	background-color: ${colors.white};
+	background-color: ${colors.blueDark};
 	position: absolute;
 	top: 0;
 	transform: ${(p): string => (p.open ? 'translateX(0)' : 'translateX(100%)')};
 	width: 100%;
 	height: 100%;
-	transition: 0.4s;
+	transition: 0.2s;
+	padding: 15px;
+	color: ${colors.white};
 `;
 
 export const CallDetailClose = styled.div`
 	width: 20px;
 	height: 20px;
-	background-image: url(${closeIcon});
+	background: url(${closeIcon}) no-repeat 50% 50%;
 	background-size: contain;
-	background-position: 50% 50%;
-	background-repeat: no-repeat;
 	cursor: pointer;
 	position: absolute;
 	top: 5px;
@@ -30,10 +30,8 @@ export const CallDetailClose = styled.div`
 `;
 
 export const CallDetailHeader = styled.div`
-	background-color: ${colors.blueDark};
 	text-align: center;
 	padding: 20px 0;
-	color: ${colors.white};
 `;
 
 export const CallDirection = styled.div`
@@ -58,6 +56,41 @@ export const CallAddressNumber = styled.div`
 	vertical-align: middle;
 `;
 
-export const CallDuration = styled.div`
+export const CallNotes = styled.div`
 	
+`;
+
+export const CallNotesTitle = styled.div`
+	font-size: 22px;
+	margin-bottom: 20px;
+	font-weight: bold;
+`;
+
+export const CallNotesList = styled.div`
+
+`;
+
+export const CallNote = styled.div`
+	background-color: ${colors.white};
+	padding: 10px;
+	border-radius: 15px;
+	color: ${colors.black};
+`;
+
+export const CallLeaveNote = styled.div`
+	background-color: ${colors.green};
+	padding: 15px;
+	font-size: 20px;
+	border-radius: 15px;
+	color: ${colors.white};
+	text-align: center;
+	cursor: pointer;
+
+	&:hover {
+		background-color: ${colors.greenDark};
+	}
+`;
+
+export const CallDuration = styled.div`
+	margin-top: 5px;
 `;

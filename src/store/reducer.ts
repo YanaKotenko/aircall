@@ -19,10 +19,7 @@ const initState = {
     callType: '',
     via: '',
     createdAt: '',
-    notes: [{
-      id: '',
-      content: '',
-    }]
+    notes: [],
   },
   token: '',
 };
