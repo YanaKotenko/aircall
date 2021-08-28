@@ -1,5 +1,6 @@
 import styled from 'styled-components/macro';
 import closeIcon from '../../assets/close.svg';
+import closeNoteIcon from '../../assets/close-note.svg';
 import { colors } from '../../styles/colors';
 
 interface ICallDetailBox {
@@ -98,7 +99,7 @@ export const ModalNote = styled.div`
 	background-color: ${colors.white};
 	width: 300px;
 	height: 200px;
-	padding: 15px;
+	padding: 29px 10px;
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -114,5 +115,16 @@ export const ModalNoteTextArea = styled.textarea`
 	resize: none;
 	padding: 8px;
 	font-family: inherit;
+`;
+
+export const ModalNoteClose = styled.div`
+	width: 20px;
+	height: 20px;
+	background: url(${closeNoteIcon}) no-repeat 50% 50%;
+	background-size: contain;
+	cursor: pointer;
+	position: absolute;
+	top: 5px;
+	right: 7px;
 `;
 

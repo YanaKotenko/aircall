@@ -52,20 +52,6 @@ export const CallDate = styled.div`
 	font-size: 12px;
 `;
  
-export const CallArchive = styled.div`
-	width: 25px;
-	height: 25px;
-	background-size: contain;
-	background-position: 50% 50%;
-	background-repeat: no-repeat;
-	margin-left: 10px;
-	cursor: pointer;
-
-	&:hover {
-		color: ${colors.greenDark};
-	}
-`;
- 
 export const CallFrom = styled.div`
 	margin-bottom: 3px;
 `;

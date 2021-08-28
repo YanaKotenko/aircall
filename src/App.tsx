@@ -92,6 +92,8 @@ const App = (): ReactElement => {
             callDetail={callDetail}
             onCloseDetail={onCloseDetail}
             onSendNote={onSendNote}
+            onArchive={onArchive}
+            onUnarchive={onUnarchive}
           />
         </Content>
       </Wrapper>

@@ -1,6 +1,7 @@
 import React, { ReactElement, useState, useEffect, ChangeEvent } from 'react';
 import { addSeconds, format } from 'date-fns'
 
+import Archivation from '../Archivation';
 import { ICall, INote } from '../../store/types';
 import {
   CallDetailBox,
@@ -17,17 +18,20 @@ import {
   CallNotesScrollBox,
   ModalNote,
   ModalNoteTextArea,
+  ModalNoteClose,
 } from './styles';
 
 interface IProps {
   callDetail: ICall;
   open: boolean;
   onCloseDetail(): void;
+  onUnarchive(callId: string): void;
+  onArchive(callId: string): void;
   onSendNote(callId: string, note: string): void;
 }
 
 const CallDetail = (props: IProps): ReactElement => {
-  const { callDetail, onCloseDetail, open, onSendNote } = props;
+  const { callDetail, onCloseDetail, open, onSendNote, onUnarchive, onArchive } = props;
   const [durationTime, setDurationTime] = useState('');
   const [modalIsVisible, setModalVisibility] = useState(false);
   const [note, setNote] = useState('');
@@ -41,17 +45,36 @@ const CallDetail = (props: IProps): ReactElement => {
     setModalVisibility(true);
   };
 
+  const onCloseModalNote = (): void => {
+    setModalVisibility(false);
+    setNote('');
+  };
+
   const onClickSend = (callId: string): void => {
     setModalVisibility(false);
     onSendNote(callId, note);
+    setNote('');
   };
 
   const onTyping = (event: ChangeEvent<HTMLTextAreaElement>): void => {
     setNote(event.target.value);
   };
 
+  const onUnarchiveCall = (): void => {
+    onUnarchive(callDetail.id);
+  };
+
+  const onArchiveCall = (): void => {
+    onArchive(callDetail.id);
+  };
+
   return (
     <CallDetailBox open={open}>
+      <Archivation
+        isArchived={callDetail.isArchived}
+        onUnarchive={onUnarchiveCall}
+        onArchive={onArchiveCall}
+      />
       <CallDetailClose onClick={onCloseDetail} />
       <CallDetailHeader>
         <CallDirection>
@@ -82,6 +105,7 @@ const CallDetail = (props: IProps): ReactElement => {
       )}
       {modalIsVisible && (
         <ModalNote>
+          <ModalNoteClose onClick={onCloseModalNote} />
           <ModalNoteTextArea
             name="textarea"
             placeholder="Text your note here..."
