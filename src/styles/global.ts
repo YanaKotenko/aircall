@@ -1,9 +1,15 @@
 import styled, { createGlobalStyle } from 'styled-components/macro';
 import paginationIcon from '../assets/pagination-arrow.svg';
+import checkboxActiveIcon from '../assets/checkbox-active.svg';
+import checkboxIcon from '../assets/checkbox.svg';
 import { colors } from './colors';
 
 interface IPrev {
 	disabled: boolean;
+}
+
+interface ICheckbox {
+	active: boolean;
 }
 
 export const GlobalStyle = createGlobalStyle`
@@ -31,6 +37,10 @@ export const Wrapper = styled.div`
   padding: 40px 10px;
   background-color: ${colors.greyLight};
   border-radius: 25px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 export const Content = styled.div`
@@ -63,4 +73,31 @@ export const CallPaginationPrev = styled(PaginationIcon)<IPrev>`
 
 export const CallPaginationNext = styled(PaginationIcon)`
   transform: rotate(-90deg);
+`;
+
+export const Checkboxes = styled.div`
+  margin-bottom: 15px;
+`;
+
+export const CheckboxWrap = styled.div`
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 10px 10px 0;
+`;
+
+export const Checkbox = styled.div<ICheckbox>`
+  cursor: pointer;
+  padding-left: 18px;
+
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 15px;
+    height: 15px;
+    top: 50%;
+    margin-top: -7px;
+    background: url(${(p): string => (p.active ? checkboxActiveIcon : checkboxIcon)});
+  }
 `;

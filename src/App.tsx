@@ -4,7 +4,7 @@ import Pusher from 'pusher-js';
 import { TRootStoreState } from './app/store';
 
 import { pusherUrl } from './api/config';
-import { ICall } from './store/types';
+import { ICall, IFilterProp } from './store/types';
 
 import {
   getCalls,
@@ -14,6 +14,8 @@ import {
   unarchiveCall,
   archiveCall,
   sendNote,
+  filterCalls,
+  toggleFilterState,
 } from './store/actions';
 
 import Call from './components/Call';
@@ -27,15 +29,19 @@ import {
   CallPagination,
   CallPaginationPrev,
   CallPaginationNext,
+  Checkboxes,
+  Checkbox,
+  CheckboxWrap,
 } from './styles/global';
 
 const App = (): ReactElement => {
   const dispatch = useDispatch();
   const {
-    callsList, callDetail, token, hasNextPage,
+    callsList, callDetail, token, hasNextPage, filteredCalls, filterProps,
   } = useSelector((store: TRootStoreState) => store.calls);
   const [callDetailIsVisibile, setCallDetailVisibility] = useState(false);
   const [paginationOffset, setPaginationOffset] = useState(1);
+  const calls = filteredCalls.length === 0 ? callsList : filteredCalls;
 
   useEffect(() => {
     dispatch(getToken());
@@ -62,11 +68,13 @@ const App = (): ReactElement => {
 
   useEffect(() => {
     if (token) {
-      console.log(paginationOffset);
-      
       dispatch(getCalls(token, paginationOffset.toString()));
     }
   }, [paginationOffset]);
+
+  useEffect(() => {
+    dispatch(filterCalls());
+  }, [filterProps, callsList]);
 
   const onPickCall = (call: ICall): void => {
     dispatch(pickCall(call));
@@ -98,36 +106,54 @@ const App = (): ReactElement => {
     if (hasNextPage) setPaginationOffset(paginationOffset + 1);
   };
 
+  const onToggleChecked = (id: number, isChecked: boolean): void => {
+    dispatch(toggleFilterState(id, isChecked));
+  };
+
   return (
     <Body>
       <GlobalStyle />
-      <Wrapper>
-        <Content>
-          <div>
-            {callsList.map((call: ICall) => (
-              <Call
-                key={call.id}
-                call={call}
-                onClickCall={(): void => onPickCall(call)}
-                onArchive={(): void => onArchive(call.id)}
-                onUnarchive={(): void => onUnarchive(call.id)}
-              />
-            ))}
-          </div>
-          <CallDetail
-            open={callDetailIsVisibile}
-            callDetail={callDetail}
-            onCloseDetail={onCloseDetail}
-            onSendNote={onSendNote}
-            onArchive={onArchive}
-            onUnarchive={onUnarchive}
-          />
-          <CallPagination>
-            <CallPaginationPrev onClick={onClickPrev} disabled={paginationOffset === 1} />
-            <CallPaginationNext onClick={onClickNext} disabled={!hasNextPage} />
-          </CallPagination>
-        </Content>
-      </Wrapper>
+      {calls.length > 0 && (
+        <Wrapper>
+          <Content>
+            <Checkboxes>
+              {filterProps.map((prop: IFilterProp) => (
+                <CheckboxWrap key={prop.id}>
+                  <Checkbox
+                    active={prop.isChecked}
+                    onClick={() => onToggleChecked(prop.id, !prop.isChecked)}
+                  >
+                    {prop.title}
+                  </Checkbox>
+                </CheckboxWrap>
+              ))}
+            </Checkboxes>
+            <div>
+              {calls.map((call: ICall) => (
+                <Call
+                  key={call.id}
+                  call={call}
+                  onClickCall={(): void => onPickCall(call)}
+                  onArchive={(): void => onArchive(call.id)}
+                  onUnarchive={(): void => onUnarchive(call.id)}
+                />
+              ))}
+            </div>
+            <CallDetail
+              open={callDetailIsVisibile}
+              callDetail={callDetail}
+              onCloseDetail={onCloseDetail}
+              onSendNote={onSendNote}
+              onArchive={onArchive}
+              onUnarchive={onUnarchive}
+            />
+            <CallPagination>
+              <CallPaginationPrev onClick={onClickPrev} disabled={paginationOffset === 1} />
+              <CallPaginationNext onClick={onClickNext} disabled={!hasNextPage} />
+            </CallPagination>
+          </Content>
+        </Wrapper>
+      )}
     </Body>
   );
 }

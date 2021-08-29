@@ -4,11 +4,30 @@ import {
   PICK_CALL,
   CLEAR_CALL,
   SET_IS_ARCHIVED,
+  FILTER_CALLS,
+  TOGGLE_FILTER_STATE,
 } from './const';
-import { ICall, IState } from './types';
+import { ICall, IFilterProp, IState } from './types';
 
 const initState = {
   callsList: [],
+  filteredCalls: [],
+  filterProps: [{
+    id: 111,
+    title: 'Archived',
+    value: 'isArchived',
+    isChecked: false,
+  }, {
+    id: 222,
+    title: 'Missed',
+    value: 'isMissed',
+    isChecked: false,
+  }, {
+    id: 333,
+    title: 'Outbound',
+    value: 'isOutbound',
+    isChecked: false,
+  }],
   callDetail: {
     id: '',
     direction: '',
@@ -16,6 +35,8 @@ const initState = {
     to: '',
     duration: 0,
     isArchived: false,
+    isMissed: false,
+    isOutbound: false,
     callType: '',
     via: '',
     createdAt: '',
@@ -60,6 +81,40 @@ const callsReducer = (state: IState = initState, action: any) => {
       return {
         ...state,
         callsList: callsListCopy,
+      };
+    }
+    case TOGGLE_FILTER_STATE: {
+			const copyStateFilter = [...state.filterProps];
+			const selectedFilters = copyStateFilter.find((filter: IFilterProp) => filter.id === action.id);
+      if (selectedFilters) selectedFilters.isChecked = action.isChecked;
+        
+      return {
+        ...state,
+        filterProps: copyStateFilter,
+      };
+    }
+
+    case FILTER_CALLS: {
+      let filteredCalls: Array<ICall> = [];
+      const copyStateCallsList = [...state.callsList];
+      const checkedFilterProps = state.filterProps
+        .filter((prop: IFilterProp) => prop.isChecked)
+        .map((prop: IFilterProp) => prop.value);
+
+      const anyFilterIsChecked = state.filterProps.some((prop: IFilterProp) => prop.isChecked);
+      if (anyFilterIsChecked) {
+        checkedFilterProps.forEach((prop: string) => {
+          filteredCalls = copyStateCallsList.filter((call: any) => {
+            return call[prop];
+          });
+        })
+      } else {
+        filteredCalls = [];
+      }
+        
+      return {
+        ...state,
+        filteredCalls: filteredCalls,
       };
     }
 

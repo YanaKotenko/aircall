@@ -6,6 +6,8 @@ import {
   PICK_CALL,
   CLEAR_CALL,
   SET_IS_ARCHIVED,
+  FILTER_CALLS,
+  TOGGLE_FILTER_STATE,
 } from './const';
 import { ICall, INote } from './types';
 
@@ -29,6 +31,8 @@ export const getCalls = (token: string, offset: string) => (dispatch: any) => {
       to: call.to,
       duration: call.duration,
       isArchived: call.is_archived,
+      isMissed: call.call_type === 'missed',
+      isOutbound: call.direction === 'outbound',
       callType: call.call_type,
       via: call.via,
       createdAt: call.created_at,
@@ -80,4 +84,12 @@ export const pickCall = (call: ICall) => (dispatch: any) => {
 
 export const clearCall = () => (dispatch: any) => {
   dispatch({ type: CLEAR_CALL });
+};
+
+export const filterCalls = () => (dispatch: any) => {
+  dispatch({ type: FILTER_CALLS });
+};
+
+export const toggleFilterState = (id: number, isChecked: boolean) => (dispatch: any) => {
+  dispatch({ type: TOGGLE_FILTER_STATE, id, isChecked });
 };
