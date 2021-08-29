@@ -1,5 +1,12 @@
 import apiFetcher from '../utils/apiFetcher';
-import { loginUrl, callsUrl, archiveUrl, unarchiveUrl, noteUrl } from '../api/config';
+import {
+  loginUrl,
+  callsUrl,
+  archiveUrl,
+  unarchiveUrl,
+  noteUrl,
+  refreshTokenUrl,
+} from '../api/config';
 import {
   GET_CALLS,
   SAVE_TOKEN,
@@ -17,6 +24,12 @@ export const getToken = () => (dispatch: any) => {
     password: 'passwordKotenko',
   };
   apiFetcher.post(loginUrl, body).then((res) => {
+    dispatch({ type: SAVE_TOKEN, token: res?.data.access_token });
+  });
+};
+
+export const getRefreshToken = (token: string) => (dispatch: any) => {
+  apiFetcher.post(refreshTokenUrl, {}, token).then((res) => {
     dispatch({ type: SAVE_TOKEN, token: res?.data.access_token });
   });
 };

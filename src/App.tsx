@@ -16,6 +16,7 @@ import {
   sendNote,
   filterCalls,
   toggleFilterState,
+  getRefreshToken,
 } from './store/actions';
 
 import Call from './components/Call';
@@ -48,8 +49,13 @@ const App = (): ReactElement => {
   }, []);
 
   useEffect(() => {
+    const tokenLifeTime = 600000;
     if (token) {
       dispatch(getCalls(token, paginationOffset.toString()));
+      
+      setInterval(() => {
+        dispatch(getRefreshToken(token));
+      }, tokenLifeTime);
 
 
       // const pusher = new Pusher('d44e3d910d38a928e0be', {
