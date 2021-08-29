@@ -6,6 +6,7 @@ import {
   SET_IS_ARCHIVED,
   FILTER_CALLS,
   TOGGLE_FILTER_STATE,
+  SET_NOTES,
 } from './const';
 import { ICall, IFilterProp, IState } from './types';
 
@@ -104,9 +105,7 @@ const callsReducer = (state: IState = initState, action: any) => {
       const anyFilterIsChecked = state.filterProps.some((prop: IFilterProp) => prop.isChecked);
       if (anyFilterIsChecked) {
         checkedFilterProps.forEach((prop: string) => {
-          filteredCalls = copyStateCallsList.filter((call: any) => {
-            return call[prop];
-          });
+          filteredCalls = copyStateCallsList.filter((call: any) => call[prop]);
         })
       } else {
         filteredCalls = [];
@@ -115,6 +114,16 @@ const callsReducer = (state: IState = initState, action: any) => {
       return {
         ...state,
         filteredCalls: filteredCalls,
+      };
+    }
+
+    case SET_NOTES: {
+      const copyStateCallDetail = { ...state.callDetail };
+      copyStateCallDetail.notes = action.notes;
+        
+      return {
+        ...state,
+        callDetail: copyStateCallDetail,
       };
     }
 

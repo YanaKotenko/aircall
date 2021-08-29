@@ -15,6 +15,7 @@ import {
   SET_IS_ARCHIVED,
   FILTER_CALLS,
   TOGGLE_FILTER_STATE,
+  SET_NOTES,
 } from './const';
 import { ICall, INote } from './types';
 
@@ -88,6 +89,11 @@ export const sendNote = (token: string, callId: string, note: string) => (dispat
   };
   apiFetcher.post(noteUrl.replace(':id', callId), body, token).then((res) => {
     console.log('note added', res);
+    const notes: Array<INote> = res?.data.notes.map((note: any): INote => ({
+      id: note.id,
+      content: note.content,
+    }));
+    dispatch({ type: SET_NOTES, notes });
   });
 };
 

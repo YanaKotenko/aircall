@@ -17,6 +17,7 @@ export const CallDetailBox = styled.div<ICallDetailBox>`
 	transition: 0.2s;
 	padding: 15px;
 	color: ${colors.white};
+	z-index: 1;
 `;
 
 export const CallDetailClose = styled.div`
