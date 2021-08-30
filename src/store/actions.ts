@@ -12,10 +12,9 @@ import {
   SAVE_TOKEN,
   PICK_CALL,
   CLEAR_CALL,
-  SET_IS_ARCHIVED,
   FILTER_CALLS,
   TOGGLE_FILTER_STATE,
-  SET_NOTES,
+  UPDATE_CALL,
 } from './const';
 import { ICall, INote } from './types';
 
@@ -63,38 +62,16 @@ export const getCalls = (token: string, offset: string) => (dispatch: any) => {
   });
 };
 
-export const archiveCall = (token: string, callId: string) => (dispatch: any) => {
-  apiFetcher.put(archiveUrl.replace(':id', callId), token).then((res) => {
-    dispatch({
-      type: SET_IS_ARCHIVED,
-      id: res?.data.id,
-      isArchived: res?.data.is_archived,
-    });
-  });
+export const archiveCall = (token: string, callId: string) => () => {
+  apiFetcher.put(archiveUrl.replace(':id', callId), token);
 };
 
-export const unarchiveCall = (token: string, callId: string) => (dispatch: any) => {
-  apiFetcher.put(unarchiveUrl.replace(':id', callId), token).then((res) => {
-    dispatch({
-      type: SET_IS_ARCHIVED,
-      id: res?.data.id,
-      isArchived: res?.data.is_archived,
-    });
-  });
+export const unarchiveCall = (token: string, callId: string) => () => {
+  apiFetcher.put(unarchiveUrl.replace(':id', callId), token);
 };
 
-export const sendNote = (token: string, callId: string, note: string) => (dispatch: any) => {
-  const body = {
-    content: note,
-  };
-  apiFetcher.post(noteUrl.replace(':id', callId), body, token).then((res) => {
-    console.log('note added', res);
-    const notes: Array<INote> = res?.data.notes.map((note: any): INote => ({
-      id: note.id,
-      content: note.content,
-    }));
-    dispatch({ type: SET_NOTES, notes });
-  });
+export const sendNote = (token: string, callId: string, note: string) => () => {
+  apiFetcher.post(noteUrl.replace(':id', callId), { content: note }, token);
 };
 
 export const pickCall = (call: ICall) => (dispatch: any) => {
@@ -111,4 +88,25 @@ export const filterCalls = () => (dispatch: any) => {
 
 export const toggleFilterState = (id: number, isChecked: boolean) => (dispatch: any) => {
   dispatch({ type: TOGGLE_FILTER_STATE, id, isChecked });
+};
+
+export const updateCall = (callItem: any) => (dispatch: any) => {
+  const call: ICall = {
+    id: callItem.id,
+    direction: callItem.direction,
+    from: callItem.from,
+    to: callItem.to,
+    duration: callItem.duration,
+    isArchived: callItem.is_archived,
+    isMissed: callItem.call_type === 'missed',
+    isOutbound: callItem.direction === 'outbound',
+    callType: callItem.call_type,
+    via: callItem.via,
+    createdAt: callItem.created_at,
+    notes: callItem.notes.map((note: any): INote => ({
+      id: note.id,
+      content: note.content,
+    })),
+  };
+  dispatch({ type: UPDATE_CALL, call });
 };

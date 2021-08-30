@@ -17,6 +17,7 @@ import {
   filterCalls,
   toggleFilterState,
   getRefreshToken,
+  updateCall,
 } from './store/actions';
 
 import Call from './components/Call';
@@ -60,12 +61,14 @@ const App = (): ReactElement => {
       const pusher = new Pusher('d44e3d910d38a928e0be', {
         cluster: 'eu',
         authEndpoint: pusherUrl,
+        auth: {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
       });
       const channel = pusher.subscribe('private-aircall');
-      channel.bind('update-call', (data: any) => {
-        console.log(data);
-        return data;
-      });
+      channel.bind('update-call', (data: any) => dispatch(updateCall(data)));
     }
   }, [token]);
 

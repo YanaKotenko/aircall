@@ -3,12 +3,11 @@ import {
   SAVE_TOKEN,
   PICK_CALL,
   CLEAR_CALL,
-  SET_IS_ARCHIVED,
   FILTER_CALLS,
   TOGGLE_FILTER_STATE,
-  SET_NOTES,
+  UPDATE_CALL,
 } from './const';
-import { ICall, IFilterProp, IState } from './types';
+import { ICall, IFilterProp, INote, IState } from './types';
 
 const initState = {
   callsList: [],
@@ -74,16 +73,6 @@ const callsReducer = (state: IState = initState, action: any) => {
         callDetail: initState.callDetail,
       };
     }
-    case SET_IS_ARCHIVED: {
-      const callsListCopy = [...state.callsList];
-      const call = callsListCopy.find((callItem: ICall) => callItem.id === action.id);
-      if (call) call.isArchived = action.isArchived;
-
-      return {
-        ...state,
-        callsList: callsListCopy,
-      };
-    }
     case TOGGLE_FILTER_STATE: {
 			const copyStateFilter = [...state.filterProps];
 			const selectedFilters = copyStateFilter.find((filter: IFilterProp) => filter.id === action.id);
@@ -117,12 +106,31 @@ const callsReducer = (state: IState = initState, action: any) => {
       };
     }
 
-    case SET_NOTES: {
-      const copyStateCallDetail = { ...state.callDetail };
-      copyStateCallDetail.notes = action.notes;
+    case UPDATE_CALL: {
+      let copyStateCallDetail = { ...state.callDetail };
+      const copyStateCallsList = [ ...state.callsList ];
+      const call = copyStateCallsList.find((callItem: ICall) => callItem.id === action.call.id);
+      if (call) {
+        call.id = action.call.id;
+        call.direction = action.call.direction;
+        call.from = action.call.from;
+        call.to = action.call.to;
+        call.duration = action.call.duration;
+        call.isArchived = action.call.isArchived;
+        call.isMissed = action.call.callType === 'missed';
+        call.isOutbound = action.call.direction === 'outbound';
+        call.callType = action.call.callType;
+        call.via = action.call.via;
+        call.createdAt = action.call.createdAt;
+        call.notes = action.call.notes;
+      };
+      if (copyStateCallDetail.id.length > 0) {
+        copyStateCallDetail = action.call;
+      }
         
       return {
         ...state,
+        callsList: copyStateCallsList,
         callDetail: copyStateCallDetail,
       };
     }
