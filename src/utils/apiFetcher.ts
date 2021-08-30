@@ -24,7 +24,11 @@ class ApiFetcher {
       .request({ url: endpoint, method, headers, data })
       .then((res) => res)
       .catch((error) => {
-        toast.error(error.response.data.message);
+        let errorMessage;
+        if (error.response.data.statusCode === 400) errorMessage = 'content must be a string and should not be empty';
+        if (error.response.data.statusCode === 401) errorMessage = 'Unauthorized';
+        if (error.response.data.statusCode === 404) errorMessage = "The call does not exist!";
+        toast.error(errorMessage);
       });
   }
 }

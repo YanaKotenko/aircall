@@ -49,7 +49,7 @@ const App = (): ReactElement => {
   }, []);
 
   useEffect(() => {
-    const tokenLifeTime = 600000;
+    const tokenLifeTime = 540000;
     if (token) {
       dispatch(getCalls(token, paginationOffset.toString()));
       
@@ -57,18 +57,15 @@ const App = (): ReactElement => {
         dispatch(getRefreshToken(token));
       }, tokenLifeTime);
 
-
-      // const pusher = new Pusher('d44e3d910d38a928e0be', {
-      //   cluster: 'eu',
-      //   authEndpoint: pusherUrl,
-      // });
-      // const channel = pusher.subscribe('private-aircall');
-      // console.log(channel);
-      // channel.bind('update-call', (data: any) => {
-      //   console.log(data);
-      //   return data;
-      //   // add new price into the APPL widget
-      // });
+      const pusher = new Pusher('d44e3d910d38a928e0be', {
+        cluster: 'eu',
+        authEndpoint: pusherUrl,
+      });
+      const channel = pusher.subscribe('private-aircall');
+      channel.bind('update-call', (data: any) => {
+        console.log(data);
+        return data;
+      });
     }
   }, [token]);
 
